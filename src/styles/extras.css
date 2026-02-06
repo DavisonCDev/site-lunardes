@@ -1,0 +1,186 @@
+/* =========================================
+   SEÇÃO SOBRE (BIO) - Estilo Colagem
+   ========================================= */
+.about-section {
+    /* Define o espaçamento interno e a cor de fundo cinza quase preto */
+    padding: 100px 5vw;
+    background-color: #0e0e0e; 
+    
+    /* Organiza o texto e a imagem lado a lado e centralizados */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    
+    /* Impede que elementos inclinados criem rolagem lateral na página */
+    overflow: hidden;
+}
+
+.about-text {
+    /* Permite que o bloco de texto cresça proporcionalmente ao container */
+    flex: 1;
+    max-width: 500px;
+    
+    /* Garante que o texto fique acima de possíveis elementos decorativos */
+    z-index: 2;
+}
+
+.about-text h2 {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: var(--accent-color);
+    text-transform: uppercase;
+}
+
+.about-text p {
+    /* Define o espaçamento entre linhas para melhor leitura de parágrafos */
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.highlight {
+    /* Aplica um fundo semitransparente para destacar palavras-chave no texto */
+    color: #fff;
+    font-weight: bold;
+    background: rgba(112, 0, 255, 0.3); 
+    padding: 0 5px;
+}
+
+/* Imagem da Bio (Estilo Polaroid/Colagem) */
+.about-image-container {
+    /* Cria o contexto de posicionamento para a 'fita adesiva' (.tape) */
+    flex: 1;
+    position: relative;
+    max-width: 500px;
+}
+
+.about-photo {
+    /* Define o tamanho da imagem e simula uma borda de foto física impressa */
+    width: 100%;
+    height: auto;
+    filter: grayscale(100%) contrast(110%); /* Efeito P&B dramático */
+    transform: rotate(3deg); /* Inclina a imagem para efeito de colagem manual */
+    border: 10px solid #fff; 
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+    
+    /* Define a velocidade da transição de volta para colorido e reto */
+    transition: 0.5s;
+}
+
+.about-image-container:hover .about-photo {
+    /* Remove a inclinação e devolve as cores originais da foto ao passar o mouse */
+    transform: rotate(0deg) scale(1.02);
+    filter: grayscale(0%);
+}
+
+.tape {
+    /* Posiciona um retângulo semitransparente no topo central da foto */
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 35px;
+    
+    /* Simula a textura de fita adesiva fosca usando desfoque de fundo */
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 3;
+    backdrop-filter: blur(2px);
+}
+
+/* =========================================
+   GALERIA VISUAL - Grid Irregular
+   ========================================= */
+.gallery-section {
+    padding: 100px 5vw;
+}
+
+.gallery-grid {
+    /* Cria um sistema de colunas automáticas que se ajustam ao tamanho da tela */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    
+    /* Tenta preencher espaços vazios deixados por itens maiores (wide/tall) */
+    grid-auto-flow: dense; 
+}
+
+.gallery-item {
+    /* Define um container de tamanho fixo para as imagens do grid */
+    position: relative;
+    overflow: hidden;
+    height: 300px; 
+    background: #222;
+}
+
+/* Modificadores que fazem a imagem ocupar 2 espaços na largura ou altura */
+.gallery-item.wide { grid-column: span 2; }
+.gallery-item.tall { grid-row: span 2; height: 615px; }
+
+.gallery-item img {
+    /* Garante que a imagem preencha o container sem ser achatada */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    
+    /* Aplica estado inicial em P&B e define tempo da animação */
+    transition: transform 0.5s, filter 0.5s;
+    filter: grayscale(100%);
+}
+
+.gallery-item:hover img {
+    /* Aplica zoom leve e remove o filtro P&B no hover */
+    transform: scale(1.1);
+    filter: grayscale(0%);
+}
+
+.gallery-overlay {
+    /* Posiciona o gradiente preto no rodapé da imagem */
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    
+    /* Esconde o texto inicialmente e prepara o movimento de subida */
+    opacity: 0;
+    transition: 0.3s;
+    transform: translateY(20px);
+}
+
+.gallery-item:hover .gallery-overlay {
+    /* Revela o texto e finaliza o movimento de subida no hover */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================================
+   RESPONSIVIDADE (Abaixo de 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    .about-section {
+        /* Inverte a ordem para que a foto apareça antes do texto no celular */
+        flex-direction: column-reverse; 
+        text-align: center;
+        gap: 40px;
+    }
+
+    .about-image-container {
+        max-width: 100%;
+    }
+    
+    .about-photo {
+        /* Remove a rotação para facilitar o alinhamento central no mobile */
+        transform: rotate(0deg); 
+    }
+
+    .gallery-item.wide, .gallery-item.tall {
+        /* Força todos os itens a ocuparem apenas 1 espaço em telas pequenas */
+        grid-column: span 1;
+        grid-row: span 1;
+        height: 300px;
+    }
+}

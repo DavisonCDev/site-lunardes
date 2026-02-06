@@ -1,0 +1,71 @@
+/* =========================================
+   VARIÁVEIS GLOBAIS (:root)
+   ========================================= */
+:root {
+    /* Define a paleta de cores principal para fácil manutenção em todo o projeto */
+    --bg-color: #0a0a0a;
+    --text-color: #ffffff;
+    --accent-color: #7000ff; /* Roxo Neon principal da banda */
+    --accent-glow: #7000ff88; /* Versão com transparência para efeitos de brilho */
+    
+    /* Define as famílias tipográficas importadas do Google Fonts */
+    --font-display: 'Syne', sans-serif; /* Usada em títulos e elementos de destaque */
+    --font-body: 'Inter', sans-serif;   /* Usada para textos longos e leitura */
+}
+
+/* =========================================
+   RESET E CONFIGURAÇÕES GLOBAIS
+   ========================================= */
+* { 
+    /* Remove as margens e preenchimentos padrão de todos os navegadores */
+    margin: 0; 
+    padding: 0; 
+    
+    /* Garante que bordas e preenchimentos não aumentem o tamanho total dos elementos */
+    box-sizing: border-box; 
+}
+
+html {
+    /* Ativa o deslizamento suave ao clicar em links internos (âncoras) */
+    scroll-behavior: smooth;
+    
+    /* Trava a largura máxima para a largura da tela do dispositivo */
+    max-width: 100vw;
+    
+    /* Esconde qualquer conteúdo que tente "vazar" para os lados (evita scroll lateral) */
+    overflow-x: hidden;
+}
+
+body {
+    /* Aplica as cores e fontes definidas no :root como padrão do site */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    
+    /* Reforça a segurança contra rolagem horizontal indesejada */
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+}
+
+/* =========================================
+   TEXTURA VISUAL (EFEITO DE RUÍDO)
+   ========================================= */
+.noise-overlay {
+    /* Fixa uma camada de textura sobre toda a tela do usuário */
+    position: fixed;
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
+    
+    /* Permite que o usuário clique nos elementos "atrás" dessa camada */
+    pointer-events: none;
+    
+    /* Define a hierarquia visual (abaixo do cursor, mas acima do conteúdo) */
+    z-index: 999;
+    
+    /* Ajusta a intensidade da textura para um grão sutil */
+    opacity: 0.05;
+    
+    /* Carrega a imagem SVG que gera o efeito de "ruído" analógico */
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
+}

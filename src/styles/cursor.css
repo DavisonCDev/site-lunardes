@@ -1,0 +1,67 @@
+/* =========================================
+   REMOÇÃO DO CURSOR PADRÃO
+   ========================================= */
+body, a, button, input { 
+    /* Desativa a renderização do ponteiro padrão do sistema operacional */
+    cursor: none; 
+}
+
+/* =========================================
+   ESTILIZAÇÃO DO CURSOR CUSTOMIZADO
+   ========================================= */
+.custom-cursor {
+    /* Fixa o elemento na tela em relação à janela de visualização (viewport) */
+    position: fixed;
+    top: 0; left: 0;
+    
+    /* Define dimensões iniciais e formato circular */
+    width: 20px; height: 20px;
+    border: 2px solid var(--accent-color);
+    border-radius: 50%;
+    
+    /* Impede que o cursor intercepte cliques, permitindo clicar nos elementos abaixo dele */
+    pointer-events: none; 
+    
+    /* Garante que o cursor fique sobre todos os outros elementos da página */
+    z-index: 9999;
+    
+    /* Alinha o centro do círculo com a ponta lógica do mouse */
+    transform: translate(-50%, -50%);
+    
+    /* Define a suavidade na mudança de tamanho e cor ao interagir */
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+    
+    /* Inverte as cores do que está atrás do cursor para garantir visibilidade em qualquer fundo */
+    mix-blend-mode: difference;
+}
+
+/* =========================================
+   ESTADO DE INTERAÇÃO (HOVER)
+   ========================================= */
+.custom-cursor.hovered {
+    /* Aumenta a área visual do cursor ao interagir com links ou botões */
+    width: 50px;
+    height: 50px;
+    
+    /* Altera o preenchimento para a cor de destaque com transparência */
+    background-color: var(--accent-color);
+    opacity: 0.5;
+    
+    /* Remove a borda para um visual mais limpo durante a expansão */
+    border-color: transparent;
+}
+
+/* =========================================
+   ACESSIBILIDADE E DISPOSITIVOS MÓVEIS
+   ========================================= */
+/* Detecta se o dispositivo NÃO possui mouse (ex: telas touch) */
+@media (hover: none) {
+    .custom-cursor { 
+        /* Esconde o cursor customizado em celulares e tablets */
+        display: none; 
+    }
+    body, a, button, input { 
+        /* Restaura o comportamento padrão do sistema para interações touch */
+        cursor: auto; 
+    }
+}

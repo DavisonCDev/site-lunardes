@@ -1,0 +1,114 @@
+/* =========================================
+   FOOTER / CONTATO
+   ========================================= */
+.footer-section {
+    /* Define o espaçamento interno (100px topo, 5% laterais, 50px base) */
+    padding: 100px 5vw 50px;
+    background: #050505;
+    text-align: center;
+    
+    /* Garante que o container ocupe toda a largura e não gere rolagem por transbordamento */
+    width: 100%;
+    overflow: hidden; 
+    box-sizing: border-box; /* Inclui padding e border no cálculo da largura total */
+}
+
+.social-big {
+    /* Organiza os links das redes sociais em uma coluna vertical */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 50px;
+    width: 100%;
+}
+
+.social-big a {
+    font-family: var(--font-display);
+
+    /* Define o tamanho da fonte de forma fluida: min 2rem, ideal 10vw, max 5rem */
+    font-size: clamp(2rem, 10vw, 5rem);
+    
+    /* Cor inicial escura para criar o efeito de "revelação" no hover */
+    color: #222;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    
+    /* Define o tempo de transição para cor, espaçamento e sombra */
+    transition: 0.4s;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+/* Aplica efeitos apenas em dispositivos que suportam a interação de passar o mouse */
+@media (hover: hover) {
+    .social-big a:hover {
+        /* Altera a cor para branco e aumenta o espaçamento entre as letras */
+        color: #fff;
+        letter-spacing: 5px; 
+        
+        /* Cria um brilho externo usando a cor de destaque do projeto */
+        text-shadow: 0 0 20px var(--accent-color);
+    }
+}
+
+.footer-section footer p {
+    /* Estilização do texto de copyright e créditos */
+    font-size: 0.8rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* =========================================
+   RESPONSIVIDADE (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+    
+    .footer-section {
+        /* Reduz os espaçamentos internos para telas menores */
+        padding: 60px 5px 40px; 
+    }
+
+    .social-big {
+        /* Aumenta o espaço entre os links para facilitar o toque (UX de dispositivos touch) */
+        gap: 20px;
+    }
+
+    .social-big a { 
+        /* Ajusta o tamanho da fonte para 7% da largura da tela do celular */
+        font-size: 7vw; 
+        
+        /* Impede que o texto quebre linha em nomes de redes sociais longos */
+        white-space: nowrap;
+    }
+
+    /* Simula o efeito de hover para dispositivos touch através do toque (active/focus) */
+    .social-big a:active,
+    .social-big a:focus {
+        letter-spacing: 3px; 
+        color: #fff;
+        text-shadow: 0 0 10px var(--accent-color);
+    }
+
+    .footer-links {
+        margin-bottom: 20px;
+    }
+
+    .press-link {
+        /* Estilização do botão de Press Kit com bordas e cores suaves */
+        color: #666;
+        text-decoration: none;
+        font-size: 0.9rem;
+        border: 1px solid #333;
+        padding: 8px 15px;
+        border-radius: 4px;
+        transition: 0.3s;
+    }
+
+    .press-link:hover {
+        /* Realça a borda e o texto com a cor principal no hover */
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+    }
+}

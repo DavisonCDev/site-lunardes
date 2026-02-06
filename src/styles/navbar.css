@@ -1,0 +1,115 @@
+/* =========================================
+   ESTRUTURA DA BARRA DE NAVEGAÇÃO
+   ========================================= */
+nav {
+    /* Alinha a logo e os links nas extremidades opostas e centraliza verticalmente */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    
+    /* Fixa a barra no topo da tela sobrepondo todo o conteúdo (z-index 1000) */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    
+    /* Aplica fundo semitransparente com efeito de desfoque nos elementos atrás da barra */
+    background: rgba(10, 10, 10, 0.3);
+    backdrop-filter: blur(10px);
+    
+    /* Adiciona uma linha sutil na base para separação visual */
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.logo img {
+    /* Define a altura da logo e aplica margens negativas para compensar espaços em branco da imagem */
+    height: 90px;
+    margin-top: -40px;
+    margin-bottom: -40px;
+}
+
+.nav-links {
+    /* Organiza os links horizontalmente com espaçamento de 40px entre eles */
+    display: flex;
+    list-style: none;
+    gap: 40px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    /* Define a suavidade da mudança de cor no hover */
+    transition: 0.3s;
+}
+
+.nav-links a:hover { 
+    /* Altera a cor e adiciona um brilho externo (glow) ao passar o mouse */
+    color: var(--accent-color); 
+    text-shadow: 0 0 10px var(--accent-color); 
+}
+
+.menu-toggle {
+    /* Esconde o ícone de menu (hambúrguer) em telas de desktop */
+    display: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001; /* Fica acima da lista de links mobile */
+    transition: 0.3s;
+}
+
+/* =========================================
+   NAVEGAÇÃO MOBILE (Abaixo de 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    .menu-toggle { 
+        /* Revela o botão de menu para dispositivos móveis */
+        display: block; 
+    }
+
+    .nav-links {
+        /* Transforma a lista horizontal em um menu vertical de tela cheia */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        
+        /* Posiciona o menu fora da tela à direita (-100%) */
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        height: 100vh;
+        
+        /* Escurece o fundo e aumenta o desfoque para foco total no menu */
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(15px);
+        
+        /* Define uma transição de entrada suave e estilizada */
+        transition: 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+        z-index: 999;
+    }
+
+    /* Classe ativada via JavaScript para trazer o menu para dentro da tela */
+    .nav-links.active { 
+        right: 0; 
+    }
+
+    .nav-links a {
+        /* Aumenta o tamanho da fonte para facilitar o clique via touch */
+        font-size: 1.8rem;
+        font-family: var(--font-display);
+    }
+
+    /* Estiliza o ícone do menu quando está aberto (girando e mudando de cor) */
+    .menu-toggle.active {
+        color: var(--accent-color);
+        transform: rotate(90deg);
+    }
+}

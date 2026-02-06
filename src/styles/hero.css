@@ -1,0 +1,138 @@
+/* =======================================================
+   1. HERO - ESTILO GERAL (PC / DESKTOP)
+   ======================================================= */
+.hero {
+    /* Define a altura como 100% da viewport dinâmica (ajusta com barras de navegadores móveis) */
+    height: 100dvh; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    
+    /* Garante que o zoom da imagem não crie barras de rolagem */
+    overflow: hidden;
+    background-color: #0e0e0e; 
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* Fica acima da imagem de fundo */
+    text-align: center;
+    
+    /* Inverte as cores do texto baseando-se no que está atrás dele (efeito artístico) */
+    mix-blend-mode: exclusion;
+    
+    /* Permite que cliques passem através do texto e atinjam o que estiver atrás */
+    pointer-events: none; 
+}
+
+.hero p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 5px; /* Aumenta o espaçamento horizontal entre as letras */
+    color: #ffffff;
+    font-family: var(--font-display);
+}
+
+.hero-img-container {
+    /* Ocupa toda a área da seção hero servindo como fundo */
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.hero-img-container picture,
+.hero-img-container img {
+    /* Garante que o container de imagem preencha todo o espaço disponível */
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.hero-img-container img {
+    width: 100%; 
+    height: 100%;
+    
+    /* Faz a imagem preencher o espaço sem distorcer, cortando as sobras */
+    object-fit: cover;
+    
+    /* Aplica estado inicial em preto e branco e com alto contraste */
+    filter: grayscale(100%) contrast(120%);
+    
+    /* Define a suavidade da transição para os efeitos de hover */
+    transition: transform 1s ease, filter 1s ease;
+    object-position: center; 
+}
+
+/* Aplica o efeito de retorno de cor e zoom quando o mouse entra na seção hero */
+.hero:hover .hero-img-container img,
+.hero:active .hero-img-container img {
+    filter: grayscale(0%) contrast(100%);
+    transform: scale(1.05); 
+}
+
+/* Classe auxiliar para manter o estado de zoom via JavaScript se necessário */
+.hero-active-zoom img {
+    filter: grayscale(0%) contrast(100%) !important;
+    transform: scale(1.05) !important;
+}
+
+
+/* =======================================================
+   2. VERSÃO MOBILE (APENAS CELULAR)
+   ======================================================= */
+@media (max-width: 768px) {
+
+    .hero h1 { font-size: 18vw; } /* Ajusta títulos para escala baseada na largura da tela */
+    
+    .hero {
+        /* Remove a altura fixa para evitar cortes em telas de celular pequenas */
+        height: auto !important;     
+        min-height: 0 !important;    
+        display: block;              
+        position: relative;
+        padding-top: 90px;           
+        background-color: #0e0e0e;
+        padding-bottom: 0;           
+    }
+
+    .hero-img-container {
+        /* Altera de absoluto para relativo para que a imagem empurre o conteúdo para baixo */
+        position: relative !important; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto !important;      
+        overflow: hidden; 
+        border-radius: 0; 
+    }
+
+    .hero-img-container img {
+        /* Desativa animações complexas para poupar processamento no celular */
+        animation: none !important;
+        
+        width: 100%;
+        height: auto !important;      
+        display: block;               
+        
+        /* Garante que a imagem inteira apareça no container sem cortes */
+        object-fit: contain;
+        
+        transition: transform 1s ease, filter 1s ease;
+    }
+
+    .hero-content {
+        /* Posiciona o texto sobreposto ao centro da imagem no mobile */
+        position: absolute;
+        top: 50%; 
+        left: 0;
+        width: 100%;
+        transform: translateY(-50%);
+        z-index: 10;
+        margin-top: 45px; 
+    }
+}

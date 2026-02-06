@@ -1,0 +1,84 @@
+/* =========================================
+   SEÇÃO DE TOUR (AGENDA DE SHOWS)
+   ========================================= */
+.tour-section {
+    /* Define o distanciamento vertical e o recuo lateral da seção */
+    padding: 100px 5vw;
+}
+
+.tour-list {
+    /* Remove os marcadores padrão da lista e cria uma linha divisória inicial */
+    list-style: none;
+    border-top: 1px solid #333;
+}
+
+.tour-item {
+    /* Alinha os dados do show (data, local, botão) horizontalmente com espaço entre eles */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+    
+    /* Cria a separação entre cada linha da agenda */
+    border-bottom: 1px solid #333;
+    
+    /* Define o tempo da transição para os efeitos de cor e movimento */
+    transition: 0.3s;
+}
+
+.tour-item:hover {
+    /* Altera o fundo para um cinza muito escuro ao passar o mouse */
+    background: #111;
+    
+    /* Cria um efeito de "recuo" movendo o conteúdo 20px para a direita */
+    padding-left: 20px;
+    
+    /* Destaca a borda inferior com a cor principal do tema no hover */
+    border-bottom: 1px solid var(--accent-color);
+}
+
+.tour-item .date {
+    /* Estilização da data com fonte de destaque e peso extra negrito */
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--accent-color);
+}
+
+.btn-ticket {
+    /* Estilo padrão do botão de ingressos: discreto e com bordas finas */
+    border: 1px solid #333;
+    padding: 10px 20px;
+    color: #888;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.tour-item:hover .btn-ticket { 
+    /* No hover do item inteiro, o botão inverte as cores para branco e preto */
+    background: #fff; 
+    color: #000; 
+    border-color: #fff;
+}
+
+/* =========================================
+   RESPONSIVIDADE DO TOUR (Abaixo de 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    .tour-item { 
+        /* Altera o alinhamento de linha para coluna em telas pequenas */
+        flex-direction: column; 
+        
+        /* Alinha os textos à esquerda e define espaço entre os elementos empilhados */
+        align-items: flex-start; 
+        gap: 15px; 
+    }
+    
+    .btn-ticket { 
+        /* Força o botão de ingressos a ocupar toda a largura disponível no celular */
+        width: 100%; 
+        text-align: center; 
+    }
+}

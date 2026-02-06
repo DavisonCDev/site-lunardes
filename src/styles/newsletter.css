@@ -1,0 +1,102 @@
+/* =========================================
+   SEÇÃO NEWSLETTER
+   ========================================= */
+.newsletter-section {
+    /* Define a cor de fundo usando a variável de destaque e o espaçamento interno */
+    background-color: var(--accent-color);
+    color: #fff;
+    padding: 80px 5vw;
+    text-align: center;
+    position: relative;
+    
+    /* Garante que o efeito 'rasgado' que vaza para fora não gere rolagem */
+    overflow: hidden;
+}
+
+/* Efeito decorativo de borda "rasgada" no topo da seção */
+.newsletter-section::before {
+    content: '';
+    position: absolute;
+    top: -10px; /* Posiciona levemente acima da borda para cobrir a transição */
+    left: 0; 
+    width: 100%; 
+    height: 20px;
+    background: #000;
+    
+    /* Cria o desenho em zigue-zague simulando papel rasgado através de coordenadas */
+    clip-path: polygon(0 0, 5% 100%, 10% 0, 15% 100%, 20% 0, 25% 100%, 30% 0, 35% 100%, 40% 0, 45% 100%, 50% 0, 55% 100%, 60% 0, 65% 100%, 70% 0, 75% 100%, 80% 0, 85% 100%, 90% 0, 95% 100%, 100% 0);
+}
+
+.newsletter-title {
+    font-family: var(--font-display);
+    /* Ajusta o tamanho da fonte dinamicamente entre 2rem e 3.5rem */
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    color: #000; 
+}
+
+.newsletter-section p {
+    font-family: var(--font-body);
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    /* Aplica um preto suavizado com 80% de opacidade para melhor harmonia visual */
+    color: rgba(0,0,0, 0.8);
+}
+
+.newsletter-form {
+    /* Alinha o campo de entrada e o botão horizontalmente */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-width: 600px;
+    margin: 0 auto; /* Centraliza o formulário na página */
+}
+
+.newsletter-form input {
+    /* Permite que o campo de e-mail ocupe o máximo de espaço possível no flexbox */
+    flex: 1;
+    padding: 15px;
+    background: transparent;
+    border: 2px solid #000;
+    font-family: var(--font-display);
+    color: #000;
+    font-weight: bold;
+    
+    /* Remove a borda padrão de foco do navegador ao clicar no campo */
+    outline: none;
+}
+
+/* Estiliza a cor do texto de exemplo (placeholder) dentro do input */
+.newsletter-form input::placeholder { color: rgba(0,0,0, 0.5); }
+
+.newsletter-form button {
+    padding: 15px 30px;
+    background: #000;
+    color: var(--accent-color);
+    border: none;
+    font-family: var(--font-display);
+    font-weight: 800;
+    cursor: pointer;
+    text-transform: uppercase;
+    
+    /* Define o tempo de transição para o efeito de escala e cor */
+    transition: all 0.2s ease;
+}
+
+.newsletter-form button:hover {
+    /* Aumenta levemente o botão e inverte as cores no hover */
+    transform: scale(1.05);
+    background: #fff;
+    color: #000;
+}
+
+/* =========================================
+   RESPONSIVIDADE (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+    .newsletter-form { 
+        /* Altera a disposição do formulário para vertical em telas pequenas */
+        flex-direction: column; 
+    }
+}
