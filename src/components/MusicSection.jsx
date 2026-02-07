@@ -17,10 +17,10 @@ function MusicSection() {
           <h3>Voe</h3>
           <p>O novo álbum está a caminho. Em breve, em todas as plataformas.</p>
           <div className="buttons">
-            <a href="https://spotify.com" className="btn-plataforma btn-spotify" target="_blank"><i className="fab fa-spotify"></i> Spotify</a>
-            <a href="https://apple.com" className="btn-plataforma btn-apple" target="_blank"><i className="fab fa-apple"></i> Apple Music</a>
-            <a href="https://deezer.com" className="btn-plataforma btn-deezer" target="_blank"><i className="fab fa-deezer"></i> Deezer</a>
-            <a href="https://youtube.com" className="btn-plataforma btn-youtube" target="_blank"><i className="fab fa-youtube"></i> Ver Clipe</a>
+            <a href="https://open.spotify.com/intl-pt/artist/70WWfmO8UlnLz0cWwEBIhp" className="btn-plataforma btn-spotify" target="_blank"><i className="fab fa-spotify"></i> Spotify</a>
+            <a href="https://music.apple.com/br/artist/lunardes/1509576887" className="btn-plataforma btn-apple" target="_blank"><i className="fab fa-apple"></i> Apple Music</a>
+            <a href="https://www.deezer.com/br/artist/92622322" className="btn-plataforma btn-deezer" target="_blank"><i className="fab fa-deezer"></i> Deezer</a>
+            <a href="https://www.youtube.com/@lunardesOficial" className="btn-plataforma btn-youtube" target="_blank"><i className="fab fa-youtube"></i> Ver Canal</a>
           </div>
         </div>
 

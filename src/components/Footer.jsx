@@ -2,9 +2,9 @@ function Footer() {
   return (
     <section id="contato" className="footer-section">
       <div className="social-big">
-        <a href="https://instagram.com" target="_blank">INSTAGRAM</a>
-        <a href="https://facebook.com" target="_blank">FACEBOOK</a>
-        <a href="https://youtube.com" target="_blank">YOUTUBE</a>
+        <a href="https://www.instagram.com/lunardes/" target="_blank">INSTAGRAM</a>
+        <a href="https://www.facebook.com/bandalunardes/" target="_blank">FACEBOOK</a>
+        <a href="https://www.youtube.com/@lunardesOficial" target="_blank">YOUTUBE</a>
       </div>
       <footer>
         <div className="footer-links" style={{ marginBottom: '20px' }}>
