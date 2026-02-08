@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { initMercadoPago } from '@mercadopago/sdk-react';
-import CheckoutBrick from './CheckoutBrick'; // Importe o novo componente
+import CheckoutBrick from './CheckoutBrick'; 
 
+// Inicializa com sua chave de teste
 initMercadoPago('TEST-a7c6aadb-8aad-44e2-baf0-c15e7f1b6dcc');
 
 function StoreSection() {
+  const navigate = useNavigate();
+  
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // 1. Busca os produtos do Backend
   useEffect(() => {
     fetch('http://localhost:8080/products')
       .then(response => response.json())
@@ -27,8 +32,20 @@ function StoreSection() {
       });
   }, []);
 
+  // 2. NOVO: Monitora se um produto foi selecionado para rolar a tela
+  useEffect(() => {
+    if (selectedProduct) {
+      const lojaSection = document.getElementById('loja');
+      if (lojaSection) {
+        // Rola suavemente até o início da seção da loja
+        lojaSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [selectedProduct]); // Executa sempre que selectedProduct mudar
+
   const handleSuccess = () => {
-    alert("🤘 PAGAMENTO APROVADO! Partiu show da Lunardes!");
+    // Redireciona para a página de sucesso
+    navigate('/success');
     setSelectedProduct(null);
   };
 
@@ -39,12 +56,14 @@ function StoreSection() {
       <h2 className="outline-title">Loja Oficial</h2>
       
       {selectedProduct ? (
+        /* Se tem produto selecionado, mostra o Checkout */
         <CheckoutBrick 
           product={selectedProduct} 
           onBack={() => setSelectedProduct(null)} 
           onSuccess={handleSuccess}
         />
       ) : (
+        /* Se não, mostra a grade de produtos */
         <div className="store-grid">
           {products.map((product) => (
             <div key={product.id} className={`product-card ${!product.available ? 'esgotado' : ''}`}>

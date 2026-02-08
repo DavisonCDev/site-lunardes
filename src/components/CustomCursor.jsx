@@ -1,45 +1,67 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import '../styles/cursor.css';
 
-function CustomCursor() {
+const CustomCursor = () => {
   const cursorRef = useRef(null);
 
   useEffect(() => {
     const cursor = cursorRef.current;
-    
-    // Se for celular/tablet (touch), não faz nada e sai
+
+    // Se não tiver cursor ou for touch (celular), aborta
     if (!cursor || window.matchMedia("(hover: none)").matches) return;
 
-    // Função que move a bolinha
+    // 1. Movimento: Segue o mouse
     const moveCursor = (e) => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
+      // Torna visível assim que o mouse mexe pela primeira vez
+      if (cursor.style.opacity === "0" || cursor.style.opacity === "") {
+        cursor.style.opacity = "1";
+      }
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
     };
 
-    // Funções para aumentar a bolinha (hover)
-    const handleMouseEnter = () => cursor.classList.add('hovered');
-    const handleMouseLeave = () => cursor.classList.remove('hovered');
+    // 2. Detecção de Hover Inteligente (Funciona em Modais e Checkout)
+    const handleMouseOver = (e) => {
+      // Lista de tudo que deve ativar o efeito do cursor
+      const clickableSelectors = `
+        a, 
+        button, 
+        input, 
+        textarea,
+        select,
+        label,
+        .btn, 
+        .btn-buy, 
+        .btn-back, 
+        .btn-modal, 
+        .product-card, 
+        .checkout-container,
+        .success-card button,
+        [role="button"]
+      `;
 
-    // Escuta o movimento do mouse na janela inteira
+      // Verifica se o elemento onde o mouse está (ou o pai dele) é clicável
+      const target = e.target.closest(clickableSelectors);
+      
+      if (target) {
+        cursor.classList.add('hovered');
+      } else {
+        cursor.classList.remove('hovered');
+      }
+    };
+
+    // Adiciona ouvintes na JANELA inteira (Global)
     window.addEventListener('mousemove', moveCursor);
-    
-    // Procura links e botões para adicionar o efeito de "aumentar"
-    const links = document.querySelectorAll('a, button, .tour-item, input, .product-card');
-    links.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
+    window.addEventListener('mouseover', handleMouseOver);
 
-    // Limpeza (quando sair da página)
+    // Limpeza ao sair
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      links.forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
+      window.removeEventListener('mouseover', handleMouseOver);
     };
   }, []);
 
   return <div className="custom-cursor" ref={cursorRef}></div>;
-}
+};
 
 export default CustomCursor;

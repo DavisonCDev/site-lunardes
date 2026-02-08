@@ -15,11 +15,9 @@ import TourSection from './components/TourSection';
 import StoreSection from './components/StoreSection';
 import NewsletterSection from './components/NewsletterSection'; 
 import Footer from './components/Footer';
-
-// 4. Import da nova página (NOVO)
 import Success from './pages/Success';
 
-// Criamos um componente para a Home para o App.jsx não ficar gigante
+// Componente para a Home para o App.jsx não ficar gigante
 const Home = () => (
   <>
     <Hero />

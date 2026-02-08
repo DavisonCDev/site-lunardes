@@ -1,38 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../styles/success.css';
 
 function Success() {
+  const navigate = useNavigate();
+
+  // 1. FORÇA A TELA A IR PARA O TOPO ASSIM QUE A PÁGINA CARREGA
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div style={{
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      background: '#0a0a0a', // Fundo dark da banda
-      color: '#fff',
-      textAlign: 'center',
-      padding: '20px'
-    }}>
-      <div style={{
-        border: '2px solid var(--primary-color)',
-        padding: '40px',
-        borderRadius: '15px',
-        boxShadow: '0 0 30px rgba(var(--primary-rgb), 0.2)'
-      }}>
-        <h1 className="outline-title" style={{ fontSize: '3.5rem', marginBottom: '10px' }}>
+    <div className="success-container">
+      <div className="success-card">
+        
+        {/* Animação do Check com a nova cor Verde Neon */}
+        <svg className="checkmark-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle className="checkmark-circle-bg" cx="26" cy="26" r="25" fill="none"/>
+          <path className="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+
+        <h1 className="success-title">
           VALEU, LUNÁTICO!
         </h1>
-        <p style={{ fontSize: '1.2rem', color: '#ccc', maxWidth: '500px' }}>
-          O seu pedido foi confirmado. Prepara o som que o seu kit já está entrando em produção! 🤘
+        
+        <p className="success-text">
+          O seu pedido foi confirmado. O sistema já está processando tudo.<br/>
+          Prepara o som que o seu kit em breve estará com você! 🤘
         </p>
-        <br />
-        <a href="/" className="btn-buy" style={{ 
-          textDecoration: 'none', 
-          marginTop: '20px',
-          display: 'inline-block' 
-        }}>
+        
+        <button onClick={() => navigate('/')} className="btn-home">
           VOLTAR PARA A HOME
-        </a>
+        </button>
       </div>
     </div>
   );

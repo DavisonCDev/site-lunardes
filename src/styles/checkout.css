@@ -1,11 +1,19 @@
+/* cores da Banda aqui */
+:root {
+    --accent-color: #7000ff;   /* Roxo Neon */
+    --accent-glow: #7000ff88;  /* Brilho com transparência */
+}
+
 .checkout-container {
     max-width: 360px;
     margin: 40px auto;
-    background: #0d0d0d; /* Preto profundo */
+    background: #0d0d0d;
     padding: 24px;
     border-radius: 16px;
-    border: 1px solid #222;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+    /* Borda sutilmente roxa */
+    border: 1px solid #222; 
+    /* Sombra externa com um toque do Roxo da banda */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(112, 0, 255, 0.05);
     position: relative;
 }
 
@@ -15,7 +23,7 @@
     color: #fff;
     border: 1px solid #333;
     padding: 6px 14px;
-    border-radius: 20px; /* Estilo pílula */
+    border-radius: 20px;
     cursor: pointer;
     font-size: 0.65rem;
     font-weight: 600;
@@ -26,10 +34,11 @@
 }
 
 .btn-back:hover {
-    background: #fff;
-    color: #000;
-    border-color: #fff;
-    transform: translateX(-3px); /* Pequeno movimento lateral */
+    background: var(--accent-color); /* Fica Roxo ao passar o mouse */
+    color: #fff;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-glow); /* Brilho no botão */
+    transform: translateX(-3px);
 }
 
 .checkout-header {
@@ -39,35 +48,37 @@
 
 .checkout-header h3 {
     font-size: 0.6rem;
-    color: #666; /* Cinza discreto */
+    color: #888;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
-/* NOME DO ITEM: O Protagonista */
+/* --- EFEITO DO "VALEU LUNÁTICO" --- */
 .product-display-name {
-    font-size: 2.2rem; /* Voltamos ao tamanho gigante */
+    font-size: 2.2rem;
     color: #fff;
     text-transform: uppercase;
     font-weight: 900;
-    line-height: 0.85; /* Letras bem "empilhadas" */
+    line-height: 0.85;
     letter-spacing: -2px;
     margin: 0;
-    /* Efeito de destaque: sombra branca sutil */
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    
+    /* O BRILHO NEON ROXO (Igual ao Success.jsx) */
+    text-shadow: 0 0 20px var(--accent-glow); 
 }
 
 .product-display-price {
     font-size: 1.1rem;
-    color: #fff;
-    font-weight: 300;
-    opacity: 0.7;
+    color: var(--accent-color); /* Preço Roxo também */
+    font-weight: 400;
+    letter-spacing: 1px;
     margin-top: 8px;
     display: block;
+    text-shadow: 0 0 10px rgba(112, 0, 255, 0.4);
 }
 
-/* Garante que o Brick do MP não quebre o layout */
+/* Garante que o formulário do MP não quebre o layout */
 .mp-checkout-custom-card-container {
     margin-top: 10px;
 }
