@@ -12,7 +12,7 @@ const Admin = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const navigate = useNavigate();
 
-  // 1. Monitora o acesso e expulsa intrusos
+  // 1. Segurança e Monitoramento de Sessão
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       const authorizedEmail = import.meta.env.VITE_ADMIN_EMAIL;
@@ -22,12 +22,11 @@ const Admin = () => {
           setUser(currentUser);
           setLoading(false);
         } else {
-          console.warn("E-mail não autorizado:", currentUser.email);
           await signOut(auth);
           setUser(null);
           setLoading(false);
-          alert("Acesso negado! Redirecionando para a Home... 🎸");
-          navigate('/'); // Chuta para a Home
+          alert("Acesso restrito! Redirecionando... 🎸");
+          navigate('/');
         }
       } else {
         setUser(null);
@@ -35,35 +34,36 @@ const Admin = () => {
         setLoading(false);
       }
     });
-
     return () => unsubscribe();
   }, [navigate]);
 
-  // 2. Busca os pedidos quando o login é confirmado
+  // 2. Busca inicial de pedidos
   useEffect(() => {
-    if (user) {
-      fetchOrders();
-    }
+    if (user) fetchOrders();
   }, [user]);
 
   const fetchOrders = async () => {
-    setIsRefreshing(true); // Inicia animação de giro
+    setIsRefreshing(true);
     try {
       const token = await auth.currentUser.getIdToken();
       const response = await fetch('http://localhost:8080/admin/orders', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
       });
       
       if (response.ok) {
         const data = await response.json();
-        setOrders(data);
+        
+        // ORDENAÇÃO: Mais recentes no topo (createdAt)
+        const sortedOrders = data.sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        
+        setOrders(sortedOrders);
       }
     } catch (error) {
       console.error("Erro ao carregar lista de pedidos:", error);
     } finally {
-      // Pequeno delay para o giro ser perceptível
+      // Delay suave para a animação do ícone
       setTimeout(() => setIsRefreshing(false), 800);
     }
   };
@@ -74,14 +74,8 @@ const Admin = () => {
   const ticketMedio = totalPedidos > 0 ? (totalFaturamento / totalPedidos) : 0;
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-      setOrders([]);
-      navigate('/');
-    } catch (error) {
-      console.error("Erro ao sair:", error);
-    }
+    await signOut(auth);
+    navigate('/');
   };
 
   if (loading) {
@@ -92,7 +86,6 @@ const Admin = () => {
     );
   }
 
-  // Tela de Login (Caso não esteja logado)
   if (!user) {
     return (
       <div className="admin-container">
@@ -107,7 +100,6 @@ const Admin = () => {
     );
   }
 
-  // Dashboard Principal
   return (
     <div className="admin-container">
       <div className="dashboard-header">
@@ -158,9 +150,10 @@ const Admin = () => {
               ) : (
                   orders.map((order) => (
                     <tr key={order.id}>
+                      {/* Correção da Data: Usando createdAt e formato pt-BR */}
                       <td>
                         {order.createdAt 
-                          ? new Date(order.createdAt).toLocaleDateString('pt-BR', {
+                          ? new Date(order.createdAt).toLocaleString('pt-BR', {
                               day: '2-digit',
                               month: '2-digit',
                               year: 'numeric',
@@ -173,6 +166,7 @@ const Admin = () => {
                       <td>{order.product}</td>
                       <td>R$ {parseFloat(order.amount).toFixed(2)}</td>
                       <td>
+                        {/* Classe de status dinâmica para o CSS */}
                         <span className={`status-badge status-${order.status?.toLowerCase()}`}>
                           {order.status}
                         </span>
