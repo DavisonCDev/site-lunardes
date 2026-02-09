@@ -1,5 +1,6 @@
-// 1. Imports de Roteamento (NOVO)
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from 'react';
+// 1. Adicionado o Navigate para o redirecionamento de segurança
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // 2. Imports de Estilo e Utilitários
 import './styles/cursor.css'; 
@@ -16,8 +17,9 @@ import StoreSection from './components/StoreSection';
 import NewsletterSection from './components/NewsletterSection'; 
 import Footer from './components/Footer';
 import Success from './pages/Success';
+import Admin from './pages/Admin';
 
-// Componente para a Home para o App.jsx não ficar gigante
+// Estrutura da Home
 const Home = () => (
   <>
     <Hero />
@@ -32,7 +34,7 @@ const Home = () => (
 
 function App() {
   return (
-    <Router> {/* NOVO: Envolve tudo com o Router */}
+    <Router>
       <CustomCursor />
       <div className="noise-overlay"></div>
       
@@ -40,16 +42,25 @@ function App() {
 
       <main>
         <Routes>
+          {/* ROTA PRINCIPAL */}
           <Route path="/" element={<Home />} />
           
-          {/* O '/*' no final diz: "Se começar com /success, não importa o que venha depois, mostre o componente Success" */}
+          {/* A ISCA: Se alguém digitar /admin, ele é expulso para a Home */}
+          <Route path="/admin" element={<Navigate to="/" replace />} />
+
+          {/* O NOVO ACESSO OFICIAL */}
+          <Route path="/backstage" element={<Admin />} />
+
           <Route path="/success/*" element={<Success />} />
+          
+          {/* REDIRECIONAMENTO GLOBAL: Se a rota não existir, vai para a Home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
       <Footer />
     </Router>
-  )
+  );
 }
 
 export default App;
