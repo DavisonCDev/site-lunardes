@@ -1,4 +1,6 @@
-/* Container Principal */
+/* =========================================
+   1. LAYOUT GERAL & RESET
+   ========================================= */
 .admin-container {
     min-height: 100vh;
     padding: 100px 20px;
@@ -7,7 +9,9 @@
     font-family: 'Courier New', monospace;
 }
 
-/* --- LOGIN --- */
+/* =========================================
+   2. TELA DE LOGIN
+   ========================================= */
 .login-box {
     max-width: 400px;
     margin: 50px auto;
@@ -22,11 +26,15 @@
 .user-avatar {
     border-radius: 50%;
     width: 45px;
+    height: 45px;
+    object-fit: cover;
     margin-right: 15px;
     border: 2px solid #7000ff;
 }
 
-/* --- HEADER --- */
+/* =========================================
+   3. HEADER E DASHBOARD
+   ========================================= */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -36,122 +44,18 @@
     padding-bottom: 20px;
 }
 
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
 .header-actions {
     display: flex;
+    align-items: center; /* Garante alinhamento vertical */
     gap: 15px;
 }
 
-/* --- BOTÕES PRINCIPAIS --- */
-.btn-refresh {
-    background: transparent;
-    border: 1px solid #00FFD5;
-    color: #00FFD5;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-}
-
-.btn-refresh:hover:not(:disabled) {
-    background: rgba(0, 255, 213, 0.1);
-    box-shadow: 0 0 15px rgba(0, 255, 213, 0.3);
-}
-
-.btn-refresh:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.btn-refresh svg {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2.5;
-}
-
-.btn-back {
-    background: #ff0055;
-    border: none;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.btn-back:hover {
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
-}
-
-/* --- CÉLULA DE AÇÕES --- */
-.actions-cell {
-    display: flex;
-    gap: 10px;
-}
-
-.btn-action {
-    background: #111;
-    border: 1px solid #333;
-    color: #666;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-action:hover:not(:disabled) {
-    background: #1a1a1a;
-    border-color: #555;
-}
-
-/* Destaque para envio (Azul) */
-.btn-action.ship:hover:not(:disabled) {
-    color: #0099ff;
-    border-color: #0099ff;
-    box-shadow: 0 0 10px rgba(0, 153, 255, 0.2);
-}
-
-/* Destaque para cancelamento (Vermelho) */
-.btn-action.cancel:hover:not(:disabled) {
-    color: #ff0055;
-    border-color: #ff0055;
-    box-shadow: 0 0 10px rgba(255, 0, 85, 0.2);
-}
-
-.btn-action:disabled {
-    opacity: 0.15;
-    cursor: not-allowed;
-    border-color: #222;
-}
-
-.btn-action svg {
-    width: 16px;
-    height: 16px;
-}
-
-/* --- ANIMAÇÃO DE GIRO --- */
-.spin-icon {
-    display: flex;
-    align-items: center;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.spinning {
-    animation: spin 0.8s linear infinite;
-}
-
-/* --- MÉTRICAS --- */
+/* --- Cards de Estatísticas --- */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -173,9 +77,67 @@
     font-size: 2rem;
     font-weight: bold;
     text-shadow: 0 0 10px rgba(112, 0, 255, 0.3);
+    margin-top: 10px;
 }
 
-/* --- TABELA --- */
+/* =========================================
+   4. BARRA DE PESQUISA (MATRIX STYLE)
+   ========================================= */
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background: #0d0d0d;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #222;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    background: #050505;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 0 15px;
+    width: 100%;
+    max-width: 500px;
+    transition: 0.3s;
+}
+
+.search-wrapper:focus-within {
+    border-color: #00FFD5;
+    box-shadow: 0 0 10px rgba(0, 255, 213, 0.2);
+}
+
+.search-icon {
+    color: #666;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.cyber-input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 12px 0;
+    width: 100%;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    outline: none;
+}
+
+.cyber-input::placeholder { color: #444; }
+
+.result-count {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* =========================================
+   5. TABELA E LISTAGEM
+   ========================================= */
 .table-responsive {
     overflow-x: auto;
     border-radius: 8px;
@@ -203,35 +165,254 @@
     color: #ccc;
 }
 
-/* --- STATUS BADGES --- */
+/* --- Botão de Expansão (+) --- */
+.btn-expand {
+    background: none;
+    border: 1px solid #333;
+    color: #00FFD5;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    margin-right: 10px;
+}
+
+.btn-expand:hover {
+    background: #00FFD5;
+    color: #000;
+}
+
+/* --- Linha de Histórico Expandida --- */
+.history-row { background-color: #0a0a0a; }
+
+.history-container {
+    padding: 20px;
+    border-left: 2px solid #00FFD5;
+    margin: 10px 20px;
+    background: #050505;
+    border-radius: 0 8px 8px 0;
+}
+
+.history-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.step-icon { margin-right: 10px; font-size: 1.2rem; }
+.step-date { color: #666; margin-left: auto; font-size: 0.8rem; }
+
+/* =========================================
+   6. STATUS BADGES (CORES)
+   ========================================= */
 .status-badge {
     padding: 5px 12px;
     border-radius: 4px;
     font-weight: bold;
     font-size: 0.75rem;
+    display: inline-block;
+    text-transform: uppercase;
 }
 
-/* Status: Aprovado/Pago e Enviado (ambos em verde/azul neon) */
-.status-approved, .status-pago, .status-enviado {
+/* VERDE: Aprovado / Pago */
+.status-approved, .status-pago, .status-aprovado {
     background: rgba(0, 255, 213, 0.1);
     color: #00FFD5;
     border: 1px solid #00FFD5;
 }
 
-.status-pending, .status-in_process, .status-pendente {
+/* AMARELO: Pendente / Em Análise */
+.status-pending, .status-in_process, .status-pendente, .status-em_análise {
     background: rgba(255, 204, 0, 0.1);
     color: #FFCC00;
     border: 1px solid #FFCC00;
 }
 
-.status-rejected, .status-cancelled, .status-cancelado, .status-error {
+/* VERMELHO: Recusado / Cancelado */
+.status-rejected, .status-cancelled, .status-cancelado, .status-recusado {
     background: rgba(255, 0, 85, 0.1);
     color: #FF0055;
     border: 1px solid #FF0055;
 }
 
-.status-refunded {
-    background: rgba(112, 0, 255, 0.1);
-    color: #7000ff;
+/* AZUL: Enviado */
+.status-enviado {
+    background: rgba(0, 153, 255, 0.15) !important;
+    color: #0099ff !important;
+    border: 1px solid #0099ff !important;
+    box-shadow: 0 0 8px rgba(0, 153, 255, 0.3);
+}
+
+/* CIANO BRILHANTE: Entregue (Sucesso Máximo) */
+.status-entregue {
+    background: rgba(0, 255, 213, 0.2) !important;
+    color: #00FFD5 !important;
+    border: 1px solid #00FFD5 !important;
+    box-shadow: 0 0 12px rgba(0, 255, 213, 0.5);
+    animation: neon-pulse 2s infinite alternate;
+}
+
+/* ROXO: Reembolsado */
+.status-refunded, .status-reembolsado {
+    background: rgba(180, 0, 255, 0.15) !important;
+    color: #b400ff !important;
+    border: 1px solid #b400ff !important;
+}
+
+@keyframes neon-pulse {
+    from { box-shadow: 0 0 5px rgba(0, 255, 213, 0.2); }
+    to { box-shadow: 0 0 15px rgba(0, 255, 213, 0.6); }
+}
+
+/* =========================================
+   7. BOTÕES E AÇÕES
+   ========================================= */
+
+/* --- Botão Exportar CSV --- */
+.btn-export {
+    background: transparent;
+    border: 1px solid #00FFD5;
+    color: #00FFD5;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-export:hover {
+    background: #00FFD5;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 255, 213, 0.4);
+}
+
+/* --- Botão Voltar/Sair --- */
+.btn-back {
+    background: #ff0055;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.btn-back:hover { box-shadow: 0 0 15px rgba(255, 0, 85, 0.4); }
+
+/* --- Botão Atualizar --- */
+.btn-refresh {
+    background: transparent;
     border: 1px solid #7000ff;
+    color: #7000ff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+.btn-refresh:hover:not(:disabled) {
+    background: rgba(112, 0, 255, 0.1);
+    box-shadow: 0 0 15px rgba(112, 0, 255, 0.3);
+}
+.btn-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* --- Botões da Tabela (Ações) --- */
+.actions-cell { display: flex; gap: 10px; }
+
+.btn-action {
+    background: #111;
+    border: 1px solid #333;
+    color: #666;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-action svg { width: 16px; height: 16px; }
+.btn-action:disabled { opacity: 0.15; cursor: not-allowed; border-color: #222; }
+
+.btn-action.ship:hover:not(:disabled) { color: #0099ff; border-color: #0099ff; }
+.btn-action.cancel:hover:not(:disabled) { color: #ff0055; border-color: #ff0055; }
+.btn-action.refund:hover:not(:disabled) { color: #b400ff; border-color: #b400ff; }
+
+/* --- CONTAINER DE ABAS --- */
+.tab-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 8px;
+    background: #0d0d0d;
+    border-radius: 8px;
+    border: 1px solid #222;
+    overflow-x: auto;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: #555;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    transition: 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tab-btn:hover { color: #ccc; background: rgba(255, 255, 255, 0.05); }
+
+.tab-btn.active { color: #00FFD5; background: rgba(0, 255, 213, 0.1); }
+.tab-btn.active.entregue { color: #00FFD5; background: rgba(0, 255, 213, 0.15); box-shadow: inset 0 0 8px rgba(0, 255, 213, 0.2); }
+.tab-btn.active.arquivado { color: #ff0055; background: rgba(255, 0, 85, 0.1); }
+.tab-btn.active.geral { color: #fff; background: #222; }
+
+.tab-count {
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+}
+
+/* =========================================
+   8. ANIMAÇÕES & RESPONSIVO
+   ========================================= */
+.spin-icon { display: flex; align-items: center; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.spinning { animation: spin 0.8s linear infinite; }
+
+@media (max-width: 1024px) {
+    .dashboard-header { flex-direction: column; gap: 20px; align-items: flex-start; }
+    .header-actions { width: 100%; justify-content: space-between; }
+}
+
+@media (max-width: 768px) {
+    .search-container { flex-direction: column; gap: 15px; align-items: flex-start; }
+    .search-wrapper { max-width: 100%; }
 }
