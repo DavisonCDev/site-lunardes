@@ -12,7 +12,9 @@ const Admin = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [expandedOrderId, setExpandedOrderId] = useState(null); 
   const [searchTerm, setSearchTerm] = useState(''); 
-  const [activeTab, setActiveTab] = useState('abertos'); 
+  
+  // Aba Geral como padrão
+  const [activeTab, setActiveTab] = useState('todos'); 
   
   const navigate = useNavigate();
 
@@ -58,11 +60,8 @@ const Admin = () => {
     finally { setTimeout(() => setIsRefreshing(false), 800); }
   };
 
-  // --- FUNÇÃO DE EXPORTAÇÃO CSV ---
   const exportToCSV = () => {
     const headers = ["ID", "Data", "Cliente", "Produto", "Valor", "Status", "Rastreio"];
-    
-    // Mapeia os dados filtrados para o formato de colunas
     const rows = filteredOrders.map(order => [
       order.id,
       formatDate(order.createdAt),
@@ -73,20 +72,12 @@ const Admin = () => {
       order.trackingCode || 'N/A'
     ]);
 
-    // Monta o conteúdo com ponto e vírgula (melhor para Excel em PT-BR)
     const csvContent = [headers, ...rows].map(e => e.join(";")).join("\n");
-    
-    // Adiciona o BOM (\ufeff) para garantir que acentos e R$ apareçam certo no Excel
     const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    
-    link.setAttribute("href", url);
+    link.setAttribute("href", URL.createObjectURL(blob));
     link.setAttribute("download", `vendas_lunardes_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
   };
 
   const updateOrderStatus = async (orderId, newStatus) => {
@@ -129,6 +120,16 @@ const Admin = () => {
       });
   };
 
+  // Helper para verificar status de forma segura (case insensitive)
+  const checkStatus = (status, target) => {
+      return status?.toLowerCase() === target?.toLowerCase();
+  };
+  
+  // Helper para verificar lista de status
+  const checkStatusList = (status, list) => {
+      return list.some(item => item.toLowerCase() === status?.toLowerCase());
+  };
+
   const filteredOrders = orders.filter((order) => {
     const search = searchTerm.toLowerCase();
     const status = order.status?.toLowerCase();
@@ -167,11 +168,9 @@ const Admin = () => {
              <h1>Olá, {user.displayName?.split(' ')[0]} 🤘</h1>
         </div>
         <div className="header-actions">
-             {/* BOTÃO DE EXPORTAR LISTA */}
-             <button className="btn-export" onClick={exportToCSV} title="Exportar visualização atual para Excel">
+             <button className="btn-export" onClick={exportToCSV} title="Exportar para CSV">
                 <FiDownload /> EXPORTAR CSV
              </button>
-
              <button className="btn-refresh" onClick={fetchOrders} disabled={isRefreshing}>
                 ATUALIZAR <FiRefreshCw className={isRefreshing ? 'spin-icon spinning' : 'spin-icon'} />
              </button>
@@ -186,17 +185,17 @@ const Admin = () => {
       </div>
 
       <div className="tab-container">
+          <button className={`tab-btn ${activeTab === 'todos' ? 'active geral' : ''}`} onClick={() => setActiveTab('todos')}>
+            GERAL
+          </button>
           <button className={`tab-btn ${activeTab === 'abertos' ? 'active' : ''}`} onClick={() => setActiveTab('abertos')}>
-            EM ABERTO <span className="tab-count">{orders.filter(o => !['entregue', 'cancelado', 'reembolsado'].includes(o.status)).length}</span>
+            EM ABERTO <span className="tab-count">{orders.filter(o => !['entregue', 'cancelado', 'reembolsado'].includes(o.status?.toLowerCase())).length}</span>
           </button>
           <button className={`tab-btn ${activeTab === 'entregues' ? 'active entregue' : ''}`} onClick={() => setActiveTab('entregues')}>
-            ENTREGUES <span className="tab-count">{orders.filter(o => o.status === 'entregue').length}</span>
+            ENTREGUES <span className="tab-count">{orders.filter(o => o.status?.toLowerCase() === 'entregue').length}</span>
           </button>
           <button className={`tab-btn ${activeTab === 'arquivados' ? 'active arquivado' : ''}`} onClick={() => setActiveTab('arquivados')}>
             ARQUIVADOS
-          </button>
-          <button className={`tab-btn ${activeTab === 'todos' ? 'active geral' : ''}`} onClick={() => setActiveTab('todos')}>
-            GERAL
           </button>
       </div>
 
@@ -229,7 +228,7 @@ const Admin = () => {
             </thead>
             <tbody>
               {filteredOrders.length === 0 ? (
-                  <tr><td colSpan="7" style={{textAlign: 'center', padding: '30px', color: '#666'}}>Nenhum pedido encontrado. 🕶️</td></tr>
+                  <tr><td colSpan="7" style={{textAlign: 'center', padding: '30px', color: '#666'}}>Nenhum pedido encontrado nesta aba. 🕶️</td></tr>
               ) : (
                   filteredOrders.map((order) => (
                     <React.Fragment key={order.id}>
@@ -247,39 +246,72 @@ const Admin = () => {
                               </span>
                           </td>
                           <td className="actions-cell">
-                            <button className="btn-action ship" title="Enviar" disabled={['enviado', 'entregue', 'cancelado', 'reembolsado'].includes(order.status)} onClick={() => updateOrderStatus(order.id, 'enviado')}><FiTruck /></button>
-                            <button className="btn-action cancel" title="Cancelar" disabled={['cancelado', 'reembolsado', 'entregue'].includes(order.status)} onClick={() => updateOrderStatus(order.id, 'cancelado')}><FiXCircle /></button>
-                            {order.status === 'cancelado' && (
+                            <button className="btn-action ship" title="Enviar" disabled={checkStatusList(order.status, ['enviado', 'entregue', 'cancelado', 'reembolsado'])} onClick={() => updateOrderStatus(order.id, 'enviado')}><FiTruck /></button>
+                            <button className="btn-action cancel" title="Cancelar" disabled={checkStatusList(order.status, ['cancelado', 'reembolsado', 'entregue', 'enviado'])} onClick={() => updateOrderStatus(order.id, 'cancelado')}><FiXCircle /></button>
+                            {checkStatus(order.status, 'cancelado') && (
                                 <button className="btn-action refund" title="Reembolsar" onClick={() => updateOrderStatus(order.id, 'reembolsado')}><FiDollarSign /></button>
                             )}
                           </td>
                         </tr>
 
+                        {/* --- CORREÇÃO AQUI: ÁREA DE HISTÓRICO --- */}
                         {expandedOrderId === order.id && (
                             <tr className="history-row">
                                 <td colSpan="7">
                                     <div className="history-container">
                                         <h4>📜 Histórico do Pedido #{order.id}</h4>
-                                        <div className="history-step"><FiClock className="step-icon"/><span>Pedido Realizado</span><span className="step-date">{formatDate(order.createdAt)}</span></div>
-                                        {['approved', 'aprovado', 'enviado', 'entregue'].includes(order.status) && (
-                                          <div className="history-step"><FiCheckCircle className="step-icon" style={{color: '#00FFD5'}}/><span>Pagamento Aprovado</span><span className="step-date">Automático</span></div>
+                                        
+                                        {/* 1. Pedido Realizado (Sempre visível) */}
+                                        <div className="history-step">
+                                            <FiClock className="step-icon"/>
+                                            <span>Pedido Realizado</span>
+                                            <span className="step-date">{formatDate(order.createdAt)}</span>
+                                        </div>
+
+                                        {/* 2. Pagamento Aprovado */}
+                                        {checkStatusList(order.status, ['approved', 'aprovado', 'enviado', 'entregue']) && (
+                                          <div className="history-step">
+                                              <FiCheckCircle className="step-icon" style={{color: '#00ff88'}}/>
+                                              <span>Pagamento Aprovado</span>
+                                              <span className="step-date">Automático</span>
+                                          </div>
                                         )}
-                                        {order.shippedAt && (
+
+                                        {/* 3. Enviado (Se tiver data de envio OU status for enviado/entregue) */}
+                                        {(order.shippedAt || checkStatusList(order.status, ['enviado', 'entregue'])) && (
                                             <div className="history-step">
                                                 <FiPackage className="step-icon" style={{color: '#0099ff'}}/>
                                                 <span>Enviado {order.trackingCode && `(${order.trackingCode})`}</span>
-                                                <span className="step-date">{formatDate(order.shippedAt)}</span>
+                                                <span className="step-date">{formatDate(order.shippedAt) || "Aguardando atualização..."}</span>
                                             </div>
                                         )}
-                                        {order.status === 'entregue' && (
+
+                                        {/* 4. Entregue */}
+                                        {checkStatus(order.status, 'entregue') && (
                                             <div className="history-step">
                                                 <FiCheckCircle className="step-icon" style={{color: '#00FFD5'}}/>
                                                 <span>Entregue</span>
                                                 <span className="step-date">Confirmado via API</span>
                                             </div>
                                         )}
-                                        {order.cancelledAt && (<div className="history-step"><FiXCircle className="step-icon" style={{color: '#ff0055'}}/><span>Cancelado</span><span className="step-date">{formatDate(order.cancelledAt)}</span></div>)}
-                                        {order.refundedAt && (<div className="history-step"><FiDollarSign className="step-icon" style={{color: '#b400ff'}}/><span>Reembolsado</span><span className="step-date">{formatDate(order.refundedAt)}</span></div>)}
+
+                                        {/* 5. Cancelado */}
+                                        {order.cancelledAt && (
+                                            <div className="history-step">
+                                                <FiXCircle className="step-icon" style={{color: '#ff0055'}}/>
+                                                <span>Cancelado</span>
+                                                <span className="step-date">{formatDate(order.cancelledAt)}</span>
+                                            </div>
+                                        )}
+
+                                        {/* 6. Reembolsado */}
+                                        {order.refundedAt && (
+                                            <div className="history-step">
+                                                <FiDollarSign className="step-icon" style={{color: '#b400ff'}}/>
+                                                <span>Reembolsado</span>
+                                                <span className="step-date">{formatDate(order.refundedAt)}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </td>
                             </tr>
