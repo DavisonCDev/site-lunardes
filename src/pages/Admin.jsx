@@ -158,7 +158,24 @@ const Admin = () => {
   const ticketMedio = totalPedidos > 0 ? (totalFaturamento / totalPedidos) : 0;
 
   if (loading) return <div className="admin-container loading-text"><h2>Sintonizando... 🎸</h2></div>;
-  if (!user) return <div className="admin-container"><button onClick={() => signInWithPopup(auth, googleProvider)}>LOGIN</button></div>;
+  // Substitua a linha: if (!user) return ... por isto:
+  if (!user) {
+    return (
+      <div className="admin-container">
+        <div className="login-box">
+            {/* Se não tiver logo, pode remover a linha da img ou usar um placeholder */}
+            <img src="https://via.placeholder.com/150/7000ff/00FFD5?text=LUNARDES" alt="Logo Lunardes" className="user-avatar" />
+            
+            <h2 className="login-title">BACKSTAGE</h2>
+            <p style={{color: '#666', marginBottom: '20px', fontSize: '0.9rem'}}>Acesso Restrito à Banda</p>
+            
+            <button onClick={() => signInWithPopup(auth, googleProvider)} className="login-btn">
+               <span style={{fontSize: '1.2rem'}}>G</span> ENTRAR COM GOOGLE
+            </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-container">
