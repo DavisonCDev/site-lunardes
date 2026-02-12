@@ -12,8 +12,6 @@ const Admin = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [expandedOrderId, setExpandedOrderId] = useState(null); 
   const [searchTerm, setSearchTerm] = useState(''); 
-  
-  // Aba Geral como padrão
   const [activeTab, setActiveTab] = useState('todos'); 
   
   const navigate = useNavigate();
@@ -25,9 +23,7 @@ const Admin = () => {
     'rejected': 'Recusado',
     'cancelled': 'Cancelado',
     'refunded': 'Reembolsado',
-    'charged_back': 'Estornado',
     'enviado': 'Enviado',
-    'reembolsado': 'Reembolsado',
     'entregue': 'Entregue'
   };
 
@@ -35,9 +31,21 @@ const Admin = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
         const authorizedEmail = import.meta.env.VITE_ADMIN_EMAIL;
         if (currentUser) {
-            if (currentUser.email === authorizedEmail) { setUser(currentUser); setLoading(false); }
-            else { await signOut(auth); setUser(null); setLoading(false); alert("Acesso restrito!"); navigate('/'); }
-        } else { setUser(null); setOrders([]); setLoading(false); }
+            if (currentUser.email === authorizedEmail) { 
+                setUser(currentUser); 
+                setLoading(false); 
+            } else { 
+                await signOut(auth); 
+                setUser(null); 
+                setLoading(false); 
+                alert("Acesso restrito!"); 
+                navigate('/'); 
+            }
+        } else { 
+            setUser(null); 
+            setOrders([]); 
+            setLoading(false); 
+        }
     });
     return () => unsubscribe();
   }, [navigate]);
@@ -53,11 +61,42 @@ const Admin = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        const sortedOrders = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        // --- LOG DE DEPURAÇÃO (ESSENCIAL) ---
+        console.log("📡 Dados brutos do Backstage:", data);
+        
+        // Ordenação segura tratando datas em String ou Array
+        const sortedOrders = data.sort((a, b) => {
+          const dateA = Array.isArray(a.createdAt) ? new Date(...a.createdAt) : new Date(a.createdAt);
+          const dateB = Array.isArray(b.createdAt) ? new Date(...b.createdAt) : new Date(b.createdAt);
+          return dateB - dateA;
+        });
+        
         setOrders(sortedOrders);
       }
-    } catch (error) { console.error("Erro:", error); } 
-    finally { setTimeout(() => setIsRefreshing(false), 800); }
+    } catch (error) { 
+        console.error("Erro ao buscar pedidos:", error); 
+    } finally { 
+        setTimeout(() => setIsRefreshing(false), 800); 
+    }
+  };
+
+  // --- FORMATAÇÃO DE DATA ROBUSTA ---
+  const formatDate = (dateValue) => {
+      if (!dateValue) return "---";
+
+      // Caso o Spring envie LocalDateTime como array: [2026, 2, 12, 17, 0]
+      if (Array.isArray(dateValue)) {
+          const [year, month, day, hour, minute] = dateValue;
+          return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year.toString().slice(-2)} ${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      }
+
+      const date = new Date(dateValue);
+      if (isNaN(date.getTime())) return "Data Inválida";
+
+      return date.toLocaleString('pt-BR', {
+          day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
+      });
   };
 
   const exportToCSV = () => {
@@ -65,7 +104,7 @@ const Admin = () => {
     const rows = filteredOrders.map(order => [
       order.id,
       formatDate(order.createdAt),
-      order.email,
+      order.email || 'N/A',
       order.product,
       `R$ ${parseFloat(order.amount).toFixed(2)}`,
       statusMap[order.status] || order.status,
@@ -109,26 +148,11 @@ const Admin = () => {
   };
 
   const toggleRow = (id) => {
-    if (expandedOrderId === id) setExpandedOrderId(null);
-    else setExpandedOrderId(id);
+    setExpandedOrderId(prev => prev === id ? null : id);
   };
 
-  const formatDate = (dateString) => {
-      if (!dateString) return null;
-      return new Date(dateString).toLocaleString('pt-BR', {
-          day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
-      });
-  };
-
-  // Helper para verificar status de forma segura (case insensitive)
-  const checkStatus = (status, target) => {
-      return status?.toLowerCase() === target?.toLowerCase();
-  };
-  
-  // Helper para verificar lista de status
-  const checkStatusList = (status, list) => {
-      return list.some(item => item.toLowerCase() === status?.toLowerCase());
-  };
+  const checkStatus = (status, target) => status?.toLowerCase() === target?.toLowerCase();
+  const checkStatusList = (status, list) => list.some(item => item.toLowerCase() === status?.toLowerCase());
 
   const filteredOrders = orders.filter((order) => {
     const search = searchTerm.toLowerCase();
@@ -158,19 +182,22 @@ const Admin = () => {
   const ticketMedio = totalPedidos > 0 ? (totalFaturamento / totalPedidos) : 0;
 
   if (loading) return <div className="admin-container loading-text"><h2>Sintonizando... 🎸</h2></div>;
-  // Substitua a linha: if (!user) return ... por isto:
+
   if (!user) {
     return (
       <div className="admin-container">
         <div className="login-box">
-            {/* Se não tiver logo, pode remover a linha da img ou usar um placeholder */}
-            <img src="https://via.placeholder.com/150/7000ff/00FFD5?text=LUNARDES" alt="Logo Lunardes" className="user-avatar" />
-            
+            <img 
+                src="/imagens/Logo Final Branco.png" 
+                alt="Logo Lunardes" 
+                className="user-avatar" 
+                style={{ borderRadius: '12px', objectFit: 'contain', width: '120px', height: '120px' }} 
+            />
             <h2 className="login-title">BACKSTAGE</h2>
-            <p style={{color: '#666', marginBottom: '20px', fontSize: '0.9rem'}}>Acesso Restrito à Banda</p>
+            <p className="login-subtitle">Acesso Restrito à Banda</p>
             
             <button onClick={() => signInWithPopup(auth, googleProvider)} className="login-btn">
-               <span style={{fontSize: '1.2rem'}}>G</span> ENTRAR COM GOOGLE
+               ENTRAR COM GOOGLE
             </button>
         </div>
       </div>
@@ -181,7 +208,12 @@ const Admin = () => {
     <div className="admin-container">
       <div className="dashboard-header">
         <div className="user-info">
-             <img src={user.photoURL} alt="Admin" className="user-avatar"/>
+             <img 
+                src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=7000ff&color=fff`} 
+                alt="Admin" 
+                className="user-avatar"
+                referrerPolicy="no-referrer"
+             />
              <h1>Olá, {user.displayName?.split(' ')[0]} 🤘</h1>
         </div>
         <div className="header-actions">
@@ -202,18 +234,14 @@ const Admin = () => {
       </div>
 
       <div className="tab-container">
-          <button className={`tab-btn ${activeTab === 'todos' ? 'active geral' : ''}`} onClick={() => setActiveTab('todos')}>
-            GERAL
-          </button>
+          <button className={`tab-btn ${activeTab === 'todos' ? 'active geral' : ''}`} onClick={() => setActiveTab('todos')}>GERAL</button>
           <button className={`tab-btn ${activeTab === 'abertos' ? 'active' : ''}`} onClick={() => setActiveTab('abertos')}>
             EM ABERTO <span className="tab-count">{orders.filter(o => !['entregue', 'cancelado', 'reembolsado'].includes(o.status?.toLowerCase())).length}</span>
           </button>
           <button className={`tab-btn ${activeTab === 'entregues' ? 'active entregue' : ''}`} onClick={() => setActiveTab('entregues')}>
             ENTREGUES <span className="tab-count">{orders.filter(o => o.status?.toLowerCase() === 'entregue').length}</span>
           </button>
-          <button className={`tab-btn ${activeTab === 'arquivados' ? 'active arquivado' : ''}`} onClick={() => setActiveTab('arquivados')}>
-            ARQUIVADOS
-          </button>
+          <button className={`tab-btn ${activeTab === 'arquivados' ? 'active arquivado' : ''}`} onClick={() => setActiveTab('arquivados')}>ARQUIVADOS</button>
       </div>
 
       <div className="search-container">
@@ -245,7 +273,7 @@ const Admin = () => {
             </thead>
             <tbody>
               {filteredOrders.length === 0 ? (
-                  <tr><td colSpan="7" style={{textAlign: 'center', padding: '30px', color: '#666'}}>Nenhum pedido encontrado nesta aba. 🕶️</td></tr>
+                  <tr><td colSpan="7" style={{textAlign: 'center', padding: '30px', color: '#666'}}>Nenhum pedido encontrado. 🕶️</td></tr>
               ) : (
                   filteredOrders.map((order) => (
                     <React.Fragment key={order.id}>
@@ -253,10 +281,11 @@ const Admin = () => {
                           <td onClick={() => toggleRow(order.id)}>
                               <button className="btn-expand">{expandedOrderId === order.id ? '-' : '+'}</button>
                           </td>
+                          {/* Exibe apenas a data na tabela principal */}
                           <td>{formatDate(order.createdAt)?.split(' ')[0]}</td> 
-                          <td><a href={`mailto:${order.email}`} style={{color: '#fff', textDecoration: 'underline'}}>{order.email}</a></td>
+                          <td><a href={`mailto:${order.email}`} style={{color: '#fff', textDecoration: 'underline'}}>{order.email || 'N/A'}</a></td>
                           <td>{order.product}</td>
-                          <td>R$ {parseFloat(order.amount).toFixed(2)}</td>
+                          <td>R$ {parseFloat(order.amount || 0).toFixed(2)}</td>
                           <td>
                               <span className={`status-badge status-${order.status?.toLowerCase()}`}>
                                   {statusMap[order.status] || order.status}
@@ -271,62 +300,42 @@ const Admin = () => {
                           </td>
                         </tr>
 
-                        {/* --- CORREÇÃO AQUI: ÁREA DE HISTÓRICO --- */}
                         {expandedOrderId === order.id && (
                             <tr className="history-row">
                                 <td colSpan="7">
                                     <div className="history-container">
                                         <h4>📜 Histórico do Pedido #{order.id}</h4>
-                                        
-                                        {/* 1. Pedido Realizado (Sempre visível) */}
                                         <div className="history-step">
                                             <FiClock className="step-icon"/>
                                             <span>Pedido Realizado</span>
                                             <span className="step-date">{formatDate(order.createdAt)}</span>
                                         </div>
-
-                                        {/* 2. Pagamento Aprovado */}
                                         {checkStatusList(order.status, ['approved', 'aprovado', 'enviado', 'entregue']) && (
                                           <div className="history-step">
                                               <FiCheckCircle className="step-icon" style={{color: '#00ff88'}}/>
                                               <span>Pagamento Aprovado</span>
-                                              <span className="step-date">Automático</span>
+                                              <span className="step-date">Sistema Automático</span>
                                           </div>
                                         )}
-
-                                        {/* 3. Enviado (Se tiver data de envio OU status for enviado/entregue) */}
                                         {(order.shippedAt || checkStatusList(order.status, ['enviado', 'entregue'])) && (
                                             <div className="history-step">
                                                 <FiPackage className="step-icon" style={{color: '#0099ff'}}/>
                                                 <span>Enviado {order.trackingCode && `(${order.trackingCode})`}</span>
-                                                <span className="step-date">{formatDate(order.shippedAt) || "Aguardando atualização..."}</span>
+                                                <span className="step-date">{formatDate(order.shippedAt)}</span>
                                             </div>
                                         )}
-
-                                        {/* 4. Entregue */}
                                         {checkStatus(order.status, 'entregue') && (
                                             <div className="history-step">
                                                 <FiCheckCircle className="step-icon" style={{color: '#00FFD5'}}/>
                                                 <span>Entregue</span>
-                                                <span className="step-date">Confirmado via API</span>
+                                                <span className="step-date">Confirmado</span>
                                             </div>
                                         )}
-
-                                        {/* 5. Cancelado */}
                                         {order.cancelledAt && (
                                             <div className="history-step">
                                                 <FiXCircle className="step-icon" style={{color: '#ff0055'}}/>
                                                 <span>Cancelado</span>
                                                 <span className="step-date">{formatDate(order.cancelledAt)}</span>
-                                            </div>
-                                        )}
-
-                                        {/* 6. Reembolsado */}
-                                        {order.refundedAt && (
-                                            <div className="history-step">
-                                                <FiDollarSign className="step-icon" style={{color: '#b400ff'}}/>
-                                                <span>Reembolsado</span>
-                                                <span className="step-date">{formatDate(order.refundedAt)}</span>
                                             </div>
                                         )}
                                     </div>
